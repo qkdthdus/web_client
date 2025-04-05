@@ -1,0 +1,10 @@
+*.user
+*.autosave
+*.pro.user*
+build-*/
+*.o
+*.obj
+*.exe
+*.log
+*.bak
+Makefile*
