@@ -66,6 +66,7 @@ void Widget::doReadyRead(){
 
 
 //SSL 선택에 따른 프로토콜/포트 설정
+//socket must be not null->need to handle the error!!
 void Widget::on_cbSSL_stateChanged(int state){
     if(state==Qt::Checked){
         ui->lePort->setText("443");
