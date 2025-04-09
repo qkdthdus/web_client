@@ -13,6 +13,7 @@ Widget::Widget(QWidget *parent)
     ui->leProtocol->setReadOnly(true);
     ui->lePort->setReadOnly(true);
     ui->pteMessage->setReadOnly(true);
+    ui->pteSend->setReadOnly(true);
 
     //socket_.connected();
     /*QObject::connect(&socket_, &QAbstractSocket::connected, this, &Widget::doConnected);
