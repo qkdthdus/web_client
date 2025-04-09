@@ -5,6 +5,8 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
+
+    //ReadOnly
     ui->setupUi(this);
     ui->pbSend->setEnabled(false);
     ui->pbDisconnect->setEnabled(false);
@@ -42,6 +44,8 @@ void Widget::doReadyRead(){
     ui->pteMessage->insertPlainText("\r\n"+msg);
 }
 
+
+//SSL 선택에 따른 프로토콜/포트 설정
 void Widget::on_cbSSL_stateChanged(int state){
     if(state==Qt::Checked){
         ui->lePort->setText("443");
@@ -52,6 +56,8 @@ void Widget::on_cbSSL_stateChanged(int state){
     }
 }
 
+
+//소켓 상태(stateChanged)에 따른 UI 버튼 활성화
 void Widget::doStateChanged(QAbstractSocket::SocketState state){
 
     bool isConnected = (state == QAbstractSocket::ConnectedState);
@@ -72,11 +78,15 @@ void Widget::doStateChanged(QAbstractSocket::SocketState state){
     ui->pteMessage->appendPlainText("Socket state changed: "+ stateStr+"\r\n");
 }
 
+
+//HOST 입력 시 자동 HTTP Request 생성
 void Widget::on_leHost_textChanged(const QString &text){
     QString httpRequest = QString("GET / HTTP/1.1\r\nHost: %1\r\n\r\n").arg(text);
     ui->pteSend->setPlainText(httpRequest);
 }
 
+
+// TCP / SSL 통신 연결
 void Widget::on_pbConnect_clicked()//tcp connection(syn)
 {
     //socket_.connectToHost(ui->leHost->text(),ui->lePort->text().toUShort());
@@ -108,6 +118,7 @@ void Widget::on_pbSend_clicked()
 }
 
 
+//화면 메시지 초기화
 void Widget::on_pbClear_clicked()
 {
     ui->pteMessage->clear();
