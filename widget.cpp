@@ -23,6 +23,25 @@ Widget::Widget(QWidget *parent)
     QObject::connect(ui->cbSSL, &QCheckBox::checkStateChanged, this, &Widget::on_cbSSL_stateChanged);
     QObject::connect(ui->leHost,&QLineEdit::textChanged, this, &Widget::on_leHost_textChanged);
 
+    QFile file("save_data.txt");
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+
+        int x, y;
+        QString line;
+
+        // 좌표
+        in >> x >> y;
+        this->move(x, y);
+        in.readLine();
+        ui->leHost->setText(in.readLine());
+        line = in.readLine();
+        ui->pteSend->setPlainText(line.replace("\\n", "\n"));
+        line = in.readLine();
+        ui->pteMessage->setPlainText(line.replace("\\n", "\n"));
+
+        file.close();
+    }
 }
 
 Widget::~Widget()
@@ -103,6 +122,27 @@ void Widget::on_pbConnect_clicked()//tcp connection(syn)
     }else{
         socket_.connectToHost(host,port);
     }
+}
+
+//save state
+void Widget::closeEvent(QCloseEvent *event)
+{
+    QFile file("save_data.txt");
+    if(file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+
+        // 화면 좌표 저장
+        QPoint pos = this->pos();
+        out << pos.x() << " " << pos.y() << "\n";
+
+        out << ui->leHost->text() << "\n";
+        out << ui->pteSend->toPlainText().replace("\n", "\\n") << "\n";
+        out << ui->pteMessage->toPlainText().replace("\n", "\\n") << "\n";
+
+        file.close();
+    }
+
+    QWidget::closeEvent(event);
 }
 
 
